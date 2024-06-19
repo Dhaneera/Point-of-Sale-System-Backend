@@ -17,7 +17,7 @@ import java.util.List;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "category id")
+    @Column(name = "categoryId")
     private  Long id;
 
     @Column(name = "category name",nullable = false)

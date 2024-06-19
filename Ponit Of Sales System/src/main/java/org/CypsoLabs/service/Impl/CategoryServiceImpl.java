@@ -1,6 +1,7 @@
 package org.CypsoLabs.service.Impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.CypsoLabs.dto.CategoryDto;
 import org.CypsoLabs.entity.Category;
 import org.CypsoLabs.repository.CategoryRepository;
@@ -14,6 +15,7 @@ import java.util.List;
 
 
 @Service
+@Slf4j
 public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
@@ -57,5 +59,21 @@ public class CategoryServiceImpl implements CategoryService {
         CategoryDto categoryDto = getCategoryByName(name);
         categoryRepository.deleteById(categoryDto.getId());
         return true;
+    }
+
+    @Override
+    public CategoryDto getCategoryById(Long id) {
+        try {
+            Category category = categoryRepository.findById(id).orElse(null);
+            if (category != null) {
+                log.debug("Category found: " + category);
+                return objectMapper.convertValue(category, CategoryDto.class);
+            }else{
+                log.warn("No category found with id: " + id);
+            }
+        }catch (Exception e) {
+            log.error("Error fetching category with name: " + id, e);
+        }
+        return null;
     }
 }

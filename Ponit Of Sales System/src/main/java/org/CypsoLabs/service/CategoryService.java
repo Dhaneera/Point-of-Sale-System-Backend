@@ -12,4 +12,6 @@ public interface CategoryService{
     CategoryDto getCategoryByName(String name);
     boolean deleteCategoryByName(String name);
 
+    CategoryDto getCategoryById(Long id);
+
 }

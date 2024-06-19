@@ -33,7 +33,7 @@ public class CategoryController {
         List<CategoryDto> categories = categoryService.getAllCategories();
         return ResponseEntity.ok(categories);
     }
-    @GetMapping("/get/{name}")
+    @GetMapping("/getByName/{name}")
     public  ResponseEntity<CategoryDto> getCategoryByName(@PathVariable String name){
         CategoryDto categoryDto = categoryService.getCategoryByName(name);
         if (categoryDto !=null) {
@@ -42,6 +42,11 @@ public class CategoryController {
         else{
             return ResponseEntity.notFound().build();
         }
+    } @GetMapping("/getById/{id}")
+    public  ResponseEntity<CategoryDto> getCategoryById(@PathVariable long id){
+        CategoryDto categoryDto = categoryService.getCategoryById(id);
+        if (categoryDto.getId() == null)return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(categoryDto);
     }
     @DeleteMapping("/delete/{name}")
     public ResponseEntity<String>deleteCategoryByName(@PathVariable String name){

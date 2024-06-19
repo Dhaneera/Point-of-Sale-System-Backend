@@ -11,35 +11,30 @@ import java.util.List;
 
 @Entity
 @Builder
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Table(name = "product")
 public class Product {
 
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "productId")
     private Long id;
 
-    @Column(name = "Name",nullable = false)
+
     private String name;
+    private  double price;
+    @Column(name = "total_description",length = 999999)
 
-    @Column(name = "Price",nullable = false)
-    private double price;
-
-    @Column(name = "Description",nullable = false)
     private String desc;
 
     @ManyToOne
-    @JoinColumn(name = "category id")
+    @JoinColumn(name = "categoryId")
     @JsonIgnore
-    private Category category;
+    private  Category category;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
     private List<Stock> stocks;
-
-
 
 }

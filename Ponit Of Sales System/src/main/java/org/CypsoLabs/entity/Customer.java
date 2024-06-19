@@ -18,20 +18,20 @@ import java.util.List;
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "customer id")
+    @Column(name = "customerId")
     private  Long id;
 
     @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
-    private Product mail;
+    private String mail;
 
     @Column(nullable = false)
     private  String address;
 
     @Column(name = "contact number",nullable = false)
-    private String contact;
+    private String phone;
 
     @OneToMany(mappedBy = "customer",fetch = FetchType.LAZY)
     private List<Orders> orders;

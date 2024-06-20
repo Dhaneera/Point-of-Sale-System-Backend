@@ -24,7 +24,7 @@ public class ProductController {
         else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add Product");
     }
     @GetMapping("/getById/{id}")
-    public  ResponseEntity<ProductDto> getProductById(@PathVariable long id){
+    public  ResponseEntity<ProductDto>getProductById(@PathVariable long id){
         ProductDto productDto = productService.getProductById(id);
         if (productDto.getId()==null)return ResponseEntity.notFound().build();
         return ResponseEntity.ok(productDto);
@@ -35,11 +35,25 @@ public class ProductController {
         List<ProductDto> products = productService.getAllProducts();
         return ResponseEntity.ok(products);
     }
+
+    @GetMapping("/getProductByName/{name}")
+    public  ResponseEntity<ProductDto>getProductByName(String name){
+        ProductDto productDto = productService.getProductByName(name);
+        if (productDto!=null)return ResponseEntity.ok(productDto);
+        else return ResponseEntity.notFound().build();
+    }
     @PutMapping("/update/{id}")
     public ResponseEntity<ProductDto>updateProduct(@PathVariable Long id,@RequestBody ProductDto productDto){
         ProductDto updateProductDto = productService.updateProductById(id, productDto);
         if (updateProductDto!=null)return ResponseEntity.ok(updateProductDto);
         else return ResponseEntity.notFound().build();
+
+    }
+    @GetMapping("/getByCategory/{categoryName}")
+    public ResponseEntity<List<ProductDto>> getProductByCategoryName(@PathVariable String categoryName){
+        List<ProductDto> productByCategory = productService.getProductByCategory(categoryName);
+        if (productByCategory.isEmpty())return ResponseEntity.noContent().build();
+        else return ResponseEntity.ok().body(productByCategory);
 
     }
     @DeleteMapping("/delete/{id}")

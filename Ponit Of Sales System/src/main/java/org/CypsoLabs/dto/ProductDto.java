@@ -22,5 +22,4 @@ public class ProductDto {
     private  String desc;
     private double price;
     private Category category;
-
 }

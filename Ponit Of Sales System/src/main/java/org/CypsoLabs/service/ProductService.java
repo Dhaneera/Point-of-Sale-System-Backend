@@ -10,6 +10,8 @@ public interface ProductService {
     List<ProductDto> getAllProducts();
     List<ProductDto> getProductByCategory(String categoryName);
 
+    ProductDto getProductByName(String name);
+
     ProductDto updateProductById(Long id , ProductDto productDto);
 
     Boolean deleteProduct(Long id);

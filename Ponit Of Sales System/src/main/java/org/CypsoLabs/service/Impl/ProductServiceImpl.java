@@ -70,6 +70,8 @@ public class ProductServiceImpl  implements ProductService {
         return null;
     }
 
+
+
     @Override
     public List<ProductDto> getAllProducts() {
         Iterable<Product> iterableProducts=productRepository.findAll();
@@ -90,14 +92,25 @@ public class ProductServiceImpl  implements ProductService {
 
     @Override
     public List<ProductDto> getProductByCategory(String categoryName) {
-        List<ProductDto> listOfALlProducts=getAllProducts();
-        List<ProductDto> listOfSpecificProducts = new ArrayList<>();
-        for (ProductDto productDto:listOfALlProducts){
-            if (Objects.equals(productDto.getCategory().getName(), categoryName)){
-                listOfSpecificProducts.add(productDto);
-            }
+        List<Product> products = productRepository.findByCategoryName(categoryName);
+        List<ProductDto> productDtos = new ArrayList<>();
+        for (Product product : products) {
+            ProductDto productDto = objectMapper.convertValue(product, ProductDto.class);
+
+            productDto.setCategory(product.getCategory());
+            productDtos.add(productDto);
         }
-        return  listOfSpecificProducts;
+        return productDtos;
+    }
+
+    @Override
+    public ProductDto getProductByName(String name) {
+        try {
+            Product product = productRepository.getByName(name);
+            return objectMapper.convertValue(product, ProductDto.class);
+        }catch (Exception e) {
+            return null;
+        }
     }
 
     @Override

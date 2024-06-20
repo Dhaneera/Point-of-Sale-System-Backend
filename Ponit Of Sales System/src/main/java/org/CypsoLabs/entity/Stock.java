@@ -1,5 +1,6 @@
 package org.CypsoLabs.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,11 +18,12 @@ import java.util.List;
 public class Stock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "stock id")
+    @Column(name = "stockId")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "productId")
+    @JsonIgnore
     private Product product;
 
     @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
@@ -38,6 +40,4 @@ public class Stock {
 
     @Column(name = "quantity",nullable = false)
     private int qty;
-
-
 }

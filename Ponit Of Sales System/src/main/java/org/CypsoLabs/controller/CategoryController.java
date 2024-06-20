@@ -54,5 +54,11 @@ public class CategoryController {
         if (deleted)return ResponseEntity.ok("Category deleted successfully");
         else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete category");
     }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<CategoryDto>updateCategory(@PathVariable Long id,@RequestBody CategoryDto categoryDto){
+        CategoryDto updateDto = categoryService.updateCategory(id, categoryDto);
+        if (updateDto!=null)return  ResponseEntity.ok(updateDto);
+        else return  ResponseEntity.notFound().build();
+    }
 
 }

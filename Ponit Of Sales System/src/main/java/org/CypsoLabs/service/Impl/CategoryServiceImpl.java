@@ -2,7 +2,9 @@ package org.CypsoLabs.service.Impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.CypsoLabs.dto.CartDto;
 import org.CypsoLabs.dto.CategoryDto;
+import org.CypsoLabs.dto.CustomerDto;
 import org.CypsoLabs.entity.Category;
 import org.CypsoLabs.repository.CategoryRepository;
 import org.CypsoLabs.service.CategoryService;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -75,5 +78,17 @@ public class CategoryServiceImpl implements CategoryService {
             log.error("Error fetching category with name: " + id, e);
         }
         return null;
+    }
+    @Override
+    public CategoryDto updateCategory(Long id, CategoryDto categoryDto) {
+        Optional<Category> optionalCategory = categoryRepository.findById(id);
+        if (optionalCategory.isPresent()){
+            Category category = optionalCategory.get();
+            category.setName(categoryDto.getName());
+
+            Category updateCategory = categoryRepository.save(category);
+            return objectMapper.convertValue(updateCategory,CategoryDto.class);
+        }
+        return  null;
     }
 }

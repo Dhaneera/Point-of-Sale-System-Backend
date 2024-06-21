@@ -6,6 +6,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -18,6 +21,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled=true)
 public class SecurityConfig {
 
     private final JwtAuthEntryPoint jwtAuthEntryPoint;
@@ -40,8 +44,9 @@ public class SecurityConfig {
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/api/auth/**").permitAll() // Permit all requests to /api/auth/**
-                                .requestMatchers("/login").permitAll() // Permit all requests to /login
+                                .requestMatchers("/api/auth/**").permitAll()// Permit all requests to /api/auth/**
+                                .requestMatchers("/login").permitAll()
+                                .requestMatchers("/api/auth/register").hasRole("ADMIN")// Permit all requests to /login
                                 .anyRequest().authenticated() // Require authentication for all other requests
                 )
                 .httpBasic(withDefaults()); // Enable HTTP Basic authentication

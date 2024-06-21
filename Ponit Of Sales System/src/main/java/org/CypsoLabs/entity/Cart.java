@@ -16,25 +16,25 @@ import lombok.NoArgsConstructor;
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "cart id")
+    @Column(name = "cartId")
     private  Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stock id")
+    @JoinColumn(name = "stockId")
     private Stock stock;
 
     @Column(name = "quantity",nullable = false)
     private int qty;
 
     @Column(name = "Total",nullable = false)
-    private int Total;
+    private Double Total;
 
     @OneToOne(mappedBy = "cart")
     @JsonIgnore
     private Orders orders;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "customer id")
+    @JoinColumn(name = "customerId")
     private Customer customer;
 
 }

@@ -1,13 +1,7 @@
 package org.CypsoLabs.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.validation.Valid;
-import org.CypsoLabs.config.ResourceNotFoundException;
-import org.CypsoLabs.dto.CategoryDto;
-import org.CypsoLabs.dto.ProductDto;
 import org.CypsoLabs.dto.StockDto;
-import org.CypsoLabs.entity.Category;
-import org.CypsoLabs.entity.Product;
 import org.CypsoLabs.entity.Stock;
 import org.CypsoLabs.repository.StockRepository;
 import org.CypsoLabs.service.StockService;
@@ -17,10 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController

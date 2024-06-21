@@ -15,11 +15,11 @@ import lombok.NoArgsConstructor;
 public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "order id")
+    @Column(name = "orderId")
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "cart id")
+    @JoinColumn(name = "cartId")
     private  Cart cart;
 
     @Column(nullable = false)
@@ -29,8 +29,8 @@ public class Orders {
     private String phone;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @Column(name = "customer id")
-    private String customer;
+    @JoinColumn(name = "customerId")
+    private Customer customer;
 
     @Column(name = "Order Total" , nullable = false)
     private  Long total;

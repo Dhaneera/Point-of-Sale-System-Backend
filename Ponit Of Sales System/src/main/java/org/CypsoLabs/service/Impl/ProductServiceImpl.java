@@ -2,7 +2,7 @@ package org.CypsoLabs.service.Impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.CypsoLabs.config.ResourceNotFoundException;
+import org.CypsoLabs.config.Resource.ResourceNotFoundException;
 import org.CypsoLabs.dto.CategoryDto;
 import org.CypsoLabs.dto.ProductDto;
 import org.CypsoLabs.entity.Category;
@@ -10,7 +10,6 @@ import org.CypsoLabs.entity.Product;
 import org.CypsoLabs.repository.ProductRepository;
 import org.CypsoLabs.service.CategoryService;
 import org.CypsoLabs.service.ProductService;
-import org.CypsoLabs.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

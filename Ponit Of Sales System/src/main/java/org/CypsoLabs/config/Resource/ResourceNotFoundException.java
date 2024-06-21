@@ -1,4 +1,4 @@
-package org.CypsoLabs.config;
+package org.CypsoLabs.config.Resource;
 
 
 public class ResourceNotFoundException extends RuntimeException{

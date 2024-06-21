@@ -5,9 +5,11 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenGenerator {
@@ -16,11 +18,16 @@ public class JwtTokenGenerator {
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime()+SecurityConstance.JWT_EXPIRATION);
 
+        String role=authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority).collect(Collectors.joining());
+
         return Jwts.builder()
-                .setSubject(username).
-                setIssuedAt(new Date()).
+                .setSubject(username)
+                .claim("role",role)
+                .setIssuedAt(new Date()).
                 setExpiration(expireDate).
-                signWith(SignatureAlgorithm.HS512,SecurityConstance.JWT_SECRET).compact();
+                signWith(SignatureAlgorithm.HS512,SecurityConstance.JWT_SECRET)
+                .compact();
     }
     public String getUsernameFromJWT(String token) {
         Claims claims = Jwts.parser()

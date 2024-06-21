@@ -1,6 +1,9 @@
 package org.CypsoLabs.service;
 
 import org.CypsoLabs.dto.CustomerDto;
+import org.CypsoLabs.dto.ProductDto;
+
+import java.util.List;
 
 public interface CustomerService {
     boolean addCustomer(CustomerDto customerDto);
@@ -11,5 +14,8 @@ public interface CustomerService {
     CustomerDto getCustomerById(Long id);
 
     boolean  deleteCustomerById(Long id);
+    List<CustomerDto> getAllCustomers();
+
+
 
 }

@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin
 @RequestMapping("/customer/api")
@@ -46,6 +48,11 @@ public class CustomerController {
         boolean removed = customerService.deleteCustomerById(id);
         if(removed)return ResponseEntity.ok("Customer successfully removed");
         else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error occurred while removing Customer");
+    }
+    @GetMapping("/getAll")
+    public ResponseEntity<List<CustomerDto>> getAllCategories() {
+        List<CustomerDto> customers = customerService.getAllCustomers();
+        return ResponseEntity.ok(customers);
     }
 
 }

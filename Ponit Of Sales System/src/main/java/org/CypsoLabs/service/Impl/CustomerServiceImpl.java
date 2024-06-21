@@ -1,7 +1,7 @@
 package org.CypsoLabs.service.Impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.CypsoLabs.config.ResourceNotFoundException;
+import org.CypsoLabs.config.Resource.ResourceNotFoundException;
 import org.CypsoLabs.dto.CustomerDto;
 import org.CypsoLabs.entity.Customer;
 import org.CypsoLabs.repository.CustomerRepository;
@@ -9,6 +9,9 @@ import org.CypsoLabs.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -72,6 +75,19 @@ public class CustomerServiceImpl implements CustomerService {
             throw new ResourceNotFoundException("Customer info not available for this id to delete: "+id);
         }
 
+    }
+
+    @Override
+    public List<CustomerDto> getAllCustomers() {
+        Iterable<Customer> iterableCustomers=customerRepository.findAll();
+        Iterator<Customer> iteratorCustomers =iterableCustomers.iterator();
+        List<CustomerDto> list = new ArrayList<>();
+        while (iteratorCustomers.hasNext()){
+            Customer customer=iteratorCustomers.next();
+            CustomerDto customerDto=mapper.convertValue(customer,CustomerDto.class);
+            list.add(customerDto);
+        }
+        return list;
     }
 
 }

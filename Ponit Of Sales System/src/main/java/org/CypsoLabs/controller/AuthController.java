@@ -1,6 +1,10 @@
 package org.CypsoLabs.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.CypsoLabs.config.security.JwtTokenGenerator;
+import org.CypsoLabs.config.security.SecurityConstance;
 import org.CypsoLabs.dto.AuthResponseDto;
 import org.CypsoLabs.dto.LoginDto;
 import org.CypsoLabs.dto.RegisterDto;
@@ -8,6 +12,7 @@ import org.CypsoLabs.entity.Role;
 import org.CypsoLabs.entity.User;
 import org.CypsoLabs.repository.RoleRepository;
 import org.CypsoLabs.repository.UserRepository;
+import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +37,7 @@ public class AuthController {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private JwtTokenGenerator jwtTokenGenerator;
+    private final JwtTokenGenerator jwtTokenGenerator;
 
     @Autowired
     public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder,JwtTokenGenerator jwtTokenGenerator) {
@@ -44,11 +49,25 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto>login(@RequestBody LoginDto loginDto){
+    public ResponseEntity<AuthResponseDto>login(@RequestBody LoginDto loginDto,HttpServletResponse response){
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authenticate);
-        String token = jwtTokenGenerator.generateToken(authenticate);
-        return new ResponseEntity<>(new AuthResponseDto(token),HttpStatus.OK);
+        String accessToken = jwtTokenGenerator.generateAccessToken(authenticate);
+        String refreshToken = jwtTokenGenerator.generateRefreshToken(authenticate);
+
+        System.out.println("r :" +refreshToken);
+        System.out.println("a :" +accessToken);
+
+        Cookie refreshTokenCookie = new Cookie("refreshToken",refreshToken);
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setSecure(true);
+        refreshTokenCookie.setPath("/");// Make the cookie available to the entire application
+        refreshTokenCookie.setMaxAge((int) SecurityConstance.JWT_REFRESH_EXPIRATION/1000);
+
+        response.addCookie(refreshTokenCookie);
+
+
+        return new ResponseEntity<>(new AuthResponseDto(accessToken,refreshToken),HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -62,7 +81,7 @@ public class AuthController {
         user.setUsername(registerDto.getUsername());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));  // Encode the password
 
-        Role role = roleRepository.findByName("ROLE_ADMIN")
+        Role role = roleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
         user.setRoles(Collections.singletonList(role));

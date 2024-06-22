@@ -27,21 +27,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        String authHeader = request.getHeader("Authorization");
+        System.out.println("Authorization Header: " + authHeader);
+
         String token=getJwtFromRequest(request);
+
         if (StringUtils.hasText(token)&&tokenGenerator.validateToken(token)){
             String username = tokenGenerator.getUsernameFromJWT(token);
 
             UserDetails userDetails =customUserDetailService.loadUserByUsername(username);
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,userDetails.getAuthorities());
+
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+            System.out.println(authenticationToken);
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
         filterChain.doFilter(request,response);
     }
-
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken)&& bearerToken.startsWith("Bearer ")){
+        if (StringUtils.hasText(bearerToken)&& bearerToken.startsWith("Bearer")){
             return bearerToken.substring(7,bearerToken.length());
         }
     return null;

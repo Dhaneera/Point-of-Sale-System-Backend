@@ -13,10 +13,18 @@ import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenGenerator {
-    public String generateToken(Authentication authentication){
+
+    public String generateAccessToken(Authentication authentication) {
+        return generateToken(authentication, SecurityConstance.JWT_EXPIRATION);
+    }
+
+    public String generateRefreshToken(Authentication authentication) {
+        return generateToken(authentication, SecurityConstance.JWT_REFRESH_EXPIRATION);
+    }
+    public String generateToken(Authentication authentication,long expirationTime){
         String username = authentication.getName();
         Date currentDate = new Date();
-        Date expireDate = new Date(currentDate.getTime()+SecurityConstance.JWT_EXPIRATION);
+        Date expireDate = new Date(currentDate.getTime()+expirationTime);
 
         String role=authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).collect(Collectors.joining());

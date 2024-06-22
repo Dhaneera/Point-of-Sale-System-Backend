@@ -18,7 +18,7 @@ public class CartController {
     @Autowired
     CartService cartService;
     @PostMapping("/add")
-    public ResponseEntity<String> addCart(@Valid @RequestBody CartDto cartDto){
+    public ResponseEntity<String>addCart(@Valid @RequestBody CartDto cartDto){
 
         boolean isSaved= cartService.addCart(cartDto);
         if (isSaved){
@@ -45,5 +45,4 @@ public class CartController {
         if (deleted)return ResponseEntity.ok("Product deleted");
         else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error occurred when delete Product");
     }
-
 }

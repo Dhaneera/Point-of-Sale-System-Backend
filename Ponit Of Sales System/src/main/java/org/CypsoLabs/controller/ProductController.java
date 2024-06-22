@@ -6,6 +6,7 @@ import org.CypsoLabs.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/add")
     public ResponseEntity<String>addProduct(@Valid @RequestBody ProductDto productDto){
         Boolean saved = productService.addProduct(productDto);
@@ -42,6 +44,8 @@ public class ProductController {
         if (productDto!=null)return ResponseEntity.ok(productDto);
         else return ResponseEntity.notFound().build();
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/update/{id}")
     public ResponseEntity<ProductDto>updateProduct(@PathVariable Long id,@RequestBody ProductDto productDto){
         ProductDto updateProductDto = productService.updateProductById(id, productDto);
@@ -56,6 +60,7 @@ public class ProductController {
         else return ResponseEntity.ok().body(productByCategory);
 
     }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String>deleteProduct(@PathVariable Long id){
         Boolean deleted = productService.deleteProduct(id);

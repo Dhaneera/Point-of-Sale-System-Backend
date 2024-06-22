@@ -6,6 +6,7 @@ import org.CypsoLabs.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/add")
     public ResponseEntity<String> addCategory(@Valid @RequestBody CategoryDto categoryDto){
 
@@ -48,12 +50,15 @@ public class CategoryController {
         if (categoryDto.getId() == null)return ResponseEntity.notFound().build();
         return ResponseEntity.ok(categoryDto);
     }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @DeleteMapping("/delete/{name}")
     public ResponseEntity<String>deleteCategoryByName(@PathVariable String name){
         boolean deleted = categoryService.deleteCategoryByName(name);
         if (deleted)return ResponseEntity.ok("Category deleted successfully");
         else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete category");
     }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/update/{id}")
     public ResponseEntity<CategoryDto>updateCategory(@PathVariable Long id,@RequestBody CategoryDto categoryDto){
         CategoryDto updateDto = categoryService.updateCategory(id, categoryDto);

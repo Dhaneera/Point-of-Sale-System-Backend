@@ -8,6 +8,7 @@ import org.CypsoLabs.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -38,6 +39,8 @@ public class StockController {
         if (stockDto.getId()==null)return ResponseEntity.notFound().build();
         return ResponseEntity.ok(stockDto);
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/update/{id}")
     public ResponseEntity<StockDto>updateStock(@PathVariable Long id,@RequestBody StockDto stockDto){
         StockDto upadateStockDto = stockService.updateStock(id, stockDto);
@@ -45,6 +48,7 @@ public class StockController {
         else return ResponseEntity.notFound().build();
 
     }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String>deleteStock(@PathVariable Long id){
         Boolean deleted = stockService.deleteStock(id);

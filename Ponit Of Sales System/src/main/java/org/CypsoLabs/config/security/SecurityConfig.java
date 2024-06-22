@@ -6,8 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -45,8 +43,7 @@ public class SecurityConfig {
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/api/auth/**").permitAll()// Permit all requests to /api/auth/**
-                                .requestMatchers("/login").permitAll()
-                                .requestMatchers("/api/auth/register").hasRole("ADMIN")// Permit all requests to /login
+                                .requestMatchers("/api/auth/login").permitAll()
                                 .anyRequest().authenticated() // Require authentication for all other requests
                 )
                 .httpBasic(withDefaults()); // Enable HTTP Basic authentication

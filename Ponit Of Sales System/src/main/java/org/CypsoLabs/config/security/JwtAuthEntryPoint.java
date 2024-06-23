@@ -15,7 +15,7 @@ public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setHeader("WWW-Authenticate", "Bearer realm=\"Public API Access\"");
+        response.setHeader("WWW-Authenticate", "Bearer realm= Public API Access");
         response.getWriter().write("Error: Unauthorized");
     }
 }

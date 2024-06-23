@@ -23,14 +23,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/auth")
 public class AuthController {
     private final AuthenticationManager authenticationManager;
@@ -48,6 +46,7 @@ public class AuthController {
         this.jwtTokenGenerator=jwtTokenGenerator;
     }
 
+
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDto>login(@RequestBody LoginDto loginDto,HttpServletResponse response){
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
@@ -55,8 +54,7 @@ public class AuthController {
         String accessToken = jwtTokenGenerator.generateAccessToken(authenticate);
         String refreshToken = jwtTokenGenerator.generateRefreshToken(authenticate);
 
-        System.out.println("r :" +refreshToken);
-        System.out.println("a :" +accessToken);
+
 
         Cookie refreshTokenCookie = new Cookie("refreshToken",refreshToken);
         refreshTokenCookie.setHttpOnly(true);
@@ -69,6 +67,7 @@ public class AuthController {
 
         return new ResponseEntity<>(new AuthResponseDto(accessToken,refreshToken),HttpStatus.OK);
     }
+
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/register")

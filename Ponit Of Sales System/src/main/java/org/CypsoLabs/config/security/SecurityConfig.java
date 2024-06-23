@@ -52,22 +52,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-//    @Bean
-//    public UserDetailsService users() {
-//        UserDetails admin = User.builder()
-//                .username("admin")
-//                .password(passwordEncoder().encode("password"))  // Encode the password
-//                .roles("ADMIN")
-//                .build();
-//
-//        UserDetails cashier = User.builder()
-//                .username("cashier")
-//                .password(passwordEncoder().encode("password"))  // Encode the password
-//                .roles("USER")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(admin, cashier);
-//    }
+
 
     @Bean
     public AuthenticationManager authenticationManager(

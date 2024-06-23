@@ -19,36 +19,44 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtTokenGenerator tokenGenerator;
+
     @Autowired
     private CustomUserDetailServiceImpl customUserDetailService;
 
-
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
         String authHeader = request.getHeader("Authorization");
-        System.out.println("Authorization Header: " + authHeader);
+        String token = getJwtFromRequest(request);
 
-        String token=getJwtFromRequest(request);
-
-        if (StringUtils.hasText(token)&&tokenGenerator.validateToken(token)){
+        if (StringUtils.hasText(token) && tokenGenerator.validateToken(token)) {
             String username = tokenGenerator.getUsernameFromJWT(token);
 
-            UserDetails userDetails =customUserDetailService.loadUserByUsername(username);
+            UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
 
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
-            System.out.println(authenticationToken);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+            String refreshToken = tokenGenerator.generateRefreshToken(authenticationToken);
+            int refreshTokenExpirationInSeconds = (int) (SecurityConstance.JWT_REFRESH_EXPIRATION / 1000);
+
+
+            String cookieName = "RefreshToken";
+            String cookieValue = refreshToken;
+            String path = "http://localhost:3000";
+            boolean httpOnly = true;
+            boolean secure = true;
+            response.setHeader("Set-Cookie", String.format("%s=%s; Path=%s; Max-Age=%d; HttpOnly; Secure", cookieName, cookieValue, path, refreshTokenExpirationInSeconds));
         }
-        filterChain.doFilter(request,response);
+
+        filterChain.doFilter(request, response);
     }
+
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken)&& bearerToken.startsWith("Bearer")){
-            return bearerToken.substring(7,bearerToken.length());
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
+            return bearerToken.substring(7);
         }
-    return null;
+        return null;
     }
 }

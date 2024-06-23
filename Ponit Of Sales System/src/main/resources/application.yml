@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/pos
+    username: *****
+    password: ******
+  jpa:
+    hibernate:
+      ddl-auto: create
+management:
+  endpoints:
+    exposure:
+      include: "*"
+  info:
+    env:
+      enabled: true
+
+

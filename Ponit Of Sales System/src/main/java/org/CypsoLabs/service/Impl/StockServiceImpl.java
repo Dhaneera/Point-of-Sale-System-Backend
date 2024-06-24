@@ -28,12 +28,14 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public Boolean addStock(StockDto stockDto) {
-        ProductDto productDto = productService.getProductByName(stockDto.getProduct().getName());
+        ProductDto productDto = productService.getProductById(stockDto.getProduct().getId());
         Stock stock = objectMapper.convertValue(stockDto, Stock.class);
         stock.setProduct(Product.builder().id(productDto.getId()).name(productDto.getName()).build());
         Stock save = stockRepository.save(stock);
         return save.getId()!=null;
     }
+
+
     @Override
     public StockDto updateStock(Long id, StockDto stockDto) {
         Optional<Stock> stockOptional = stockRepository.findById(id);
@@ -41,8 +43,6 @@ public class StockServiceImpl implements StockService {
             Stock stock = stockOptional.get();
 
             stock.setQty(stockDto.getQty());
-            stock.setSize(stockDto.getSize());
-            stock.setColor(stockDto.getColor());
             stock.setPrice(stockDto.getPrice());
 
             if (stockDto.getProduct()!=null){
@@ -88,8 +88,6 @@ public class StockServiceImpl implements StockService {
     private StockDto convertStockToDTO(Stock stock) {
         StockDto stockDTO = new StockDto();
         stockDTO.setId(stock.getId());
-        stockDTO.setColor(stock.getColor());
-        stockDTO.setSize(stock.getSize());
         stockDTO.setPrice(stock.getPrice());
         stockDTO.setQty(stock.getQty());
 
@@ -123,17 +121,4 @@ public class StockServiceImpl implements StockService {
         }
         return null;
     }
-
-    @Override
-    public List<Stock> getStockSizeAndColor(String color, String size, Long productId) {
-        List<Stock> stockList = stockRepository.findBySizeAndColorAndProductId(color, size, productId);
-        if (stockList.isEmpty()){
-            return Collections.emptyList();
-        }else{
-            return stockList;
-        }
-    }
-
-
-
 }

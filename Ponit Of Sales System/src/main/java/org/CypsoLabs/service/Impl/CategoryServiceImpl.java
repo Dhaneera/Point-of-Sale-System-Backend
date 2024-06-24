@@ -2,9 +2,7 @@ package org.CypsoLabs.service.Impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.CypsoLabs.dto.CartDto;
 import org.CypsoLabs.dto.CategoryDto;
-import org.CypsoLabs.dto.CustomerDto;
 import org.CypsoLabs.entity.Category;
 import org.CypsoLabs.repository.CategoryRepository;
 import org.CypsoLabs.service.CategoryService;

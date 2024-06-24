@@ -1,9 +1,6 @@
 package org.CypsoLabs.service;
 
-import org.CypsoLabs.dto.CartDto;
 import org.CypsoLabs.dto.CategoryDto;
-import org.CypsoLabs.dto.CustomerDto;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 

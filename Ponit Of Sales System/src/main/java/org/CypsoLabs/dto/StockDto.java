@@ -8,10 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.CypsoLabs.entity.Cart;
 import org.CypsoLabs.entity.Product;
-
-import java.util.List;
 
 @Data
 @Builder
@@ -21,10 +18,6 @@ import java.util.List;
 public class StockDto {
     @Valid
     private Long id;
-    @NotBlank(message = "colour is null")
-    private  String color;
-    @NotBlank(message = "size is null")
-    private String size;
     @NotBlank(message = "price is null")
     private Double price;
     @NotBlank(message = "Quantity is null")

@@ -32,7 +32,6 @@ public class StockController {
         else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add Stock");
     }
 
-
     @GetMapping("/getById/{id}")
     public  ResponseEntity<StockDto>getStockById(@PathVariable Long id){
         StockDto stockDto = stockService.getStockById(id);
@@ -40,7 +39,6 @@ public class StockController {
         return ResponseEntity.ok(stockDto);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/update/{id}")
     public ResponseEntity<StockDto>updateStock(@PathVariable Long id,@RequestBody StockDto stockDto){
         StockDto upadateStockDto = stockService.updateStock(id, stockDto);
@@ -48,7 +46,7 @@ public class StockController {
         else return ResponseEntity.notFound().build();
 
     }
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String>deleteStock(@PathVariable Long id){
         Boolean deleted = stockService.deleteStock(id);
@@ -56,15 +54,6 @@ public class StockController {
         else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error occurred when delete Stock");
     }
 
-    @GetMapping("/get")
-   public  List<Stock> stockList(@RequestParam String color,@RequestParam String size, @RequestParam Long id){
-        List<Stock> stockDtoList = stockService.getStockSizeAndColor(color, size, id);
-        if (stockDtoList.isEmpty()){
-            List list =new ArrayList<>();
-            list.add("notvalid");
-            return list;
-        }
-        return stockDtoList;
-    }
+
 
 }

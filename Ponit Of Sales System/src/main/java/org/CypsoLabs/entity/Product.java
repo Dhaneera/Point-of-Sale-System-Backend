@@ -27,7 +27,6 @@ public class Product {
     private String name;
     private  double price;
     @Column(name = "total_description",length = 999999)
-
     private String desc;
 
     @ManyToOne

@@ -12,7 +12,6 @@ public interface StockService {
     List<StockDto> listStock(Long id);
     StockDto getStockById(Long id);
 
-    List<Stock> getStockSizeAndColor(String color,String size,Long productId);
 
 
 

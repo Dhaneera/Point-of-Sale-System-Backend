@@ -38,7 +38,6 @@ public class CustomerController {
         if (customerDto ==null)return ResponseEntity.notFound().build();
         else return ResponseEntity.ok(customerDto);
     }
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
 
     @PutMapping("/update/{id}")
     public ResponseEntity<CustomerDto>updateCustomerById(@PathVariable Long id, @RequestBody CustomerDto customerDto){
@@ -46,7 +45,7 @@ public class CustomerController {
         if (updateCustomerDto!=null)return ResponseEntity.ok(updateCustomerDto);
         else return ResponseEntity.notFound().build();
     }
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @DeleteMapping("/remove/{id}")
     public ResponseEntity<String>removeCustomerById(@PathVariable Long id){
         boolean removed = customerService.deleteCustomerById(id);

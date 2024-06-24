@@ -23,6 +23,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -33,6 +35,7 @@ public class AuthController {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenGenerator jwtTokenGenerator;
+
 
     @Autowired
     public AuthController(AuthenticationManager authenticationManager, UsersRepository usersRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtTokenGenerator jwtTokenGenerator) {
@@ -51,6 +54,8 @@ public class AuthController {
         String accessToken = jwtTokenGenerator.generateAccessToken(authenticate);
         String refreshToken = jwtTokenGenerator.generateRefreshToken(authenticate);
 
+        User user = usersRepository.findByUsername(loginDto.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
+        List<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toList());
 
 
         Cookie refreshTokenCookie = new Cookie("refreshToken",refreshToken);
@@ -62,11 +67,9 @@ public class AuthController {
         response.addCookie(refreshTokenCookie);
 
 
-        return new ResponseEntity<>(new AuthResponseDto(accessToken,refreshToken),HttpStatus.OK);
+        return new ResponseEntity<>(new AuthResponseDto(accessToken,refreshToken,roles),HttpStatus.OK);
     }
 
-
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
         if (usersRepository.existsByUsername(registerDto.getUsername())) {
@@ -86,4 +89,5 @@ public class AuthController {
 
         return new ResponseEntity<>("User register Success!", HttpStatus.OK);
     }
+
 }

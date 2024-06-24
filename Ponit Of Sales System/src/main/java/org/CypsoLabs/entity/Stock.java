@@ -26,15 +26,6 @@ public class Stock {
     @JsonIgnore
     private Product product;
 
-    @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    private List<Cart> cart;
-
-    @Column(name = "Color",nullable = false)
-    private  String color;
-
-    @Column(name = "size",nullable = false)
-    private String size;
-
     @Column(name = "price",nullable = false)
     private Double price;
 

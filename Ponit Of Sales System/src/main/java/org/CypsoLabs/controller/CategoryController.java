@@ -12,14 +12,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/category/api")
 public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/add")
     public ResponseEntity<String> addCategory(@Valid @RequestBody CategoryDto categoryDto){
 
@@ -50,7 +48,6 @@ public class CategoryController {
         if (categoryDto.getId() == null)return ResponseEntity.notFound().build();
         return ResponseEntity.ok(categoryDto);
     }
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
 
     @DeleteMapping("/delete/{name}")
     public ResponseEntity<String>deleteCategoryByName(@PathVariable String name){
@@ -58,7 +55,7 @@ public class CategoryController {
         if (deleted)return ResponseEntity.ok("Category deleted successfully");
         else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete category");
     }
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @PutMapping("/update/{id}")
     public ResponseEntity<CategoryDto>updateCategory(@PathVariable Long id,@RequestBody CategoryDto categoryDto){
         CategoryDto updateDto = categoryService.updateCategory(id, categoryDto);

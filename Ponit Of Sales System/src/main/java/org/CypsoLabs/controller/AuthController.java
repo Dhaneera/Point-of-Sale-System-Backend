@@ -1,7 +1,6 @@
 package org.CypsoLabs.controller;
 
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.CypsoLabs.config.security.JwtTokenGenerator;
 import org.CypsoLabs.config.security.SecurityConstance;
@@ -11,8 +10,7 @@ import org.CypsoLabs.dto.RegisterDto;
 import org.CypsoLabs.entity.Role;
 import org.CypsoLabs.entity.User;
 import org.CypsoLabs.repository.RoleRepository;
-import org.CypsoLabs.repository.UserRepository;
-import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
+import org.CypsoLabs.repository.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +18,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -32,15 +29,15 @@ import java.util.Collections;
 @RequestMapping("/api/auth")
 public class AuthController {
     private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
+    private final UsersRepository usersRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenGenerator jwtTokenGenerator;
 
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder,JwtTokenGenerator jwtTokenGenerator) {
+    public AuthController(AuthenticationManager authenticationManager, UsersRepository usersRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtTokenGenerator jwtTokenGenerator) {
         this.authenticationManager = authenticationManager;
-        this.userRepository = userRepository;
+        this.usersRepository = usersRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenGenerator=jwtTokenGenerator;
@@ -72,7 +69,7 @@ public class AuthController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
-        if (userRepository.existsByUsername(registerDto.getUsername())) {
+        if (usersRepository.existsByUsername(registerDto.getUsername())) {
             return new ResponseEntity<>("User name is taken", HttpStatus.BAD_REQUEST);
         }
 
@@ -85,7 +82,7 @@ public class AuthController {
 
         user.setRoles(Collections.singletonList(role));
 
-        userRepository.save(user);
+        usersRepository.save(user);
 
         return new ResponseEntity<>("User register Success!", HttpStatus.OK);
     }

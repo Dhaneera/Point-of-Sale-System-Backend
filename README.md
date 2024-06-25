@@ -43,6 +43,7 @@ Welcome to the Spring Boot Point of Sale (POS) System repository. This applicati
 ### Configuration
 
 The application uses an in-memory H2 database by default. You can configure the database settings in the `src/main/resources/application.properties` file to use a different database.
+To run the front-end of this application please use this link (https://github.com/SDW-SWD/Point-of-Sale-System-Frontend)
 
 ```properties
 # Default H2 Database configuration
@@ -70,4 +71,4 @@ management:
     env:
       enabled: true
 
-To run the front-end of this application please use this link (https://github.com/SDW-SWD/Point-of-Sale-System-Frontend)
+

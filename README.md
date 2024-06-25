@@ -70,3 +70,4 @@ management:
     env:
       enabled: true
 
+To run the front-end of this application please use this link (https://github.com/SDW-SWD/Point-of-Sale-System-Frontend)

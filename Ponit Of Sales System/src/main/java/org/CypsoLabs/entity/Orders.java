@@ -1,5 +1,7 @@
 package org.CypsoLabs.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,15 +14,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Table(name = "orders")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "orderId")
     private Long id;
-
-    @OneToOne
-    @JoinColumn(name = "cartId")
-    private  Cart cart;
 
     @Column(nullable = false)
     private String address;
@@ -34,6 +33,4 @@ public class Orders {
 
     @Column(name = "Order Total" , nullable = false)
     private  Long total;
-
-
 }

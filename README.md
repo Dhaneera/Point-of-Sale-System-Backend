@@ -4,16 +4,14 @@ Welcome to the Spring Boot Point of Sale (POS) System repository. This applicati
 
 ## Features
 - **Sales Management**: Handle transactions, generate receipts, and manage daily sales.
-- **Inventory Management**: Track product stock, add new products, and update existing product details.
-- **Customer Management**: Maintain customer information and purchase history.
+- **Order Management**: Track product stock, add new orders, and update existing order details.
+- **Customer Management**: Maintain customer information.
 - **User Authentication**: Secure login and role-based access control.
-- **Reporting**: Generate sales and inventory reports.
 
 ## Technologies Used
 - **Backend**: Spring Boot
-- **Database**: H2 (in-memory) for development, configurable to use MySQL or PostgreSQL for production
+- **Database**: H2 (in-memory) for development, configurable to use MySQL  for production
 - **Build Tool**: Maven
-- **Testing**: JUnit, Mockito
 
 ## Getting Started
 

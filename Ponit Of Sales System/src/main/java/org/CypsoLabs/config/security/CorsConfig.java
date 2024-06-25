@@ -18,18 +18,5 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowCredentials(true) // Allow cookies, if any
                 .maxAge(3600); // Max age of CORS options response
     }
-//    @Bean
-//    public CorsFilter corsFilter() {
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        CorsConfiguration config = new CorsConfiguration();
-//
-//        // Allow all origins, headers, and methods for development purposes
-//        config.addAllowedOrigin("http://localhost:3000");
-//        config.addAllowedOrigin("*");
-//        config.addAllowedHeader("*");
-//        config.addAllowedMethod("*");
-//
-//        source.registerCorsConfiguration("/**", config);
-//        return new CorsFilter(source);
-//    }
+
 }

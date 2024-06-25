@@ -1,6 +1,7 @@
 package org.CypsoLabs.controller;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.CypsoLabs.config.security.JwtTokenGenerator;
 import org.CypsoLabs.config.security.SecurityConstance;
@@ -11,6 +12,7 @@ import org.CypsoLabs.entity.Role;
 import org.CypsoLabs.entity.User;
 import org.CypsoLabs.repository.RoleRepository;
 import org.CypsoLabs.repository.UsersRepository;
+import org.CypsoLabs.service.Impl.CustomUserDetailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +21,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.GrantedAuthority;
+
 
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +41,8 @@ public class AuthController {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenGenerator jwtTokenGenerator;
+
+    private CustomUserDetailServiceImpl customUserDetailService;
 
 
     @Autowired
@@ -61,7 +69,7 @@ public class AuthController {
         Cookie refreshTokenCookie = new Cookie("refreshToken",refreshToken);
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setSecure(true);
-        refreshTokenCookie.setPath("/");// Make the cookie available to the entire application
+        refreshTokenCookie.setPath("/");
         refreshTokenCookie.setMaxAge((int) SecurityConstance.JWT_REFRESH_EXPIRATION/1000);
 
         response.addCookie(refreshTokenCookie);
@@ -70,6 +78,41 @@ public class AuthController {
         return new ResponseEntity<>(new AuthResponseDto(accessToken,refreshToken,roles),HttpStatus.OK);
     }
 
+//    @PostMapping("/refresh")
+//    public ResponseEntity<AuthResponseDto> refreshTokens(HttpServletRequest request, HttpServletResponse response) {
+//        Cookie[] cookies = request.getCookies();
+//        if (cookies != null) {
+//            for (Cookie cookie : cookies) {
+//                if (cookie.getName().equals("refreshToken")) {
+//                    String refreshToken = cookie.getValue();
+//                    if (StringUtils.hasText(refreshToken) && jwtTokenGenerator.validateToken(refreshToken)) {
+//                        String username = jwtTokenGenerator.getUsernameFromJWT(refreshToken);
+//                        UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
+//                        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+//
+//                        String newAccessToken = jwtTokenGenerator.generateAccessToken(authentication);
+//                        String newRefreshToken = jwtTokenGenerator.generateRefreshToken(authentication);
+//
+//                        // Update the refresh token cookie
+//                        Cookie newRefreshTokenCookie = new Cookie("refreshToken", newRefreshToken);
+//                        newRefreshTokenCookie.setHttpOnly(true);
+//                        newRefreshTokenCookie.setSecure(true);
+//                        newRefreshTokenCookie.setPath("/");
+//                        newRefreshTokenCookie.setMaxAge((int) SecurityConstance.JWT_REFRESH_EXPIRATION / 1000);
+//                        response.addCookie(newRefreshTokenCookie);
+//
+//                        // Return the new tokens to the client
+//                        List<String> roles = userDetails.getAuthorities().stream()
+//                                .map(GrantedAuthority::getAuthority)
+//                                .collect(Collectors.toList());
+//                        return ResponseEntity.ok(new AuthResponseDto(newAccessToken, newRefreshToken, roles));
+//                    }
+//                }
+//            }
+//        }
+//
+//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//    }
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterDto registerDto) {
         if (usersRepository.existsByUsername(registerDto.getUsername())) {
@@ -78,10 +121,9 @@ public class AuthController {
 
         User user = new User();
         user.setUsername(registerDto.getUsername());
-        user.setPassword(passwordEncoder.encode(registerDto.getPassword()));  // Encode the password
+        user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
-        Role role = roleRepository.findByName("ROLE_USER")
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+        Role role = roleRepository.findByName("ROLE_USER");
 
         user.setRoles(Collections.singletonList(role));
 

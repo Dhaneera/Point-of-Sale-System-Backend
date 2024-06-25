@@ -2,6 +2,7 @@ package org.CypsoLabs.config.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.CypsoLabs.service.Impl.CustomUserDetailServiceImpl;
@@ -23,6 +24,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private CustomUserDetailServiceImpl customUserDetailService;
 
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
@@ -43,9 +45,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             String cookieName = "RefreshToken";
             String cookieValue = refreshToken;
-            String path = "http://localhost:3000";
+            String path = "/";
             boolean httpOnly = true;
             boolean secure = true;
+            int maxAgeInSeconds = (int) (SecurityConstance.JWT_REFRESH_EXPIRATION / 1000);
+
+            Cookie newRefreshTokenCookie = new Cookie(cookieName, cookieValue);
+            newRefreshTokenCookie.setHttpOnly(httpOnly);
+            newRefreshTokenCookie.setSecure(secure); // Set secure flag to true
+            newRefreshTokenCookie.setPath(path);
+            newRefreshTokenCookie.setMaxAge(maxAgeInSeconds);
             response.setHeader("Set-Cookie", String.format("%s=%s; Path=%s; Max-Age=%d; HttpOnly; Secure", cookieName, cookieValue, path, refreshTokenExpirationInSeconds));
         }
 

@@ -95,7 +95,6 @@ public class ProductServiceImpl  implements ProductService {
         List<ProductDto> productDtos = new ArrayList<>();
         for (Product product : products) {
             ProductDto productDto = objectMapper.convertValue(product, ProductDto.class);
-
             productDto.setCategory(product.getCategory());
             productDtos.add(productDto);
         }
@@ -118,35 +117,20 @@ public class ProductServiceImpl  implements ProductService {
 
         if (productOptional.isPresent()) {
             Product product = productOptional.get();
-
-            // Update fields from productDto
             product.setName(productDto.getName());
             product.setDesc(productDto.getDesc());
             product.setPrice(productDto.getPrice());
-
-            // Update category if provided in productDto
             if (productDto.getCategory() != null) {
                  Category category1= productDto.getCategory();
-
-                // Convert CategoryDto to Category entity if necessary
                 CategoryDto categoryDto = objectMapper.convertValue(category1, CategoryDto.class);
-
-                // Set the converted category entity
                 product.setCategory(category1);
             } else {
-                // Handle case where productDto has null category (optional)
-                product.setCategory(null); // Or handle default category logic if needed
+                product.setCategory(null);
             }
-
-            // Save the updated product
             Product updatedProduct = productRepository.save(product);
-
-            // Convert updated product to ProductDto
-
             return objectMapper.convertValue(updatedProduct, ProductDto.class);
         }
-
-        return null; // Handle case where product with given ID is not found
+        return null;
     }
 
     @Override
@@ -157,7 +141,6 @@ public class ProductServiceImpl  implements ProductService {
         }else {
             throw new ResourceNotFoundException("product info not available for this id to delete: "+id);
         }
-
     }
 
     @Override

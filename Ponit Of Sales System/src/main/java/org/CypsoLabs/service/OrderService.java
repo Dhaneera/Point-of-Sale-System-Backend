@@ -5,6 +5,6 @@ import java.util.List;
 
 public interface OrderService {
     boolean addOrder(OrdersDto orderDto);
-    OrdersDto getOrderById(Long id); // Add this method to get order details by ID
-    List<OrdersDto> getAllOrders(); // Optionally, add a method to get all orders
+    OrdersDto getOrderById(Long id);
+    List<OrdersDto> getAllOrders();
 }

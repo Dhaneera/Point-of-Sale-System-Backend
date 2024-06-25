@@ -41,15 +41,11 @@ public class StockServiceImpl implements StockService {
         Optional<Stock> stockOptional = stockRepository.findById(id);
         if (stockOptional.isPresent()){
             Stock stock = stockOptional.get();
-
             stock.setQty(stockDto.getQty());
             stock.setPrice(stockDto.getPrice());
-
             if (stockDto.getProduct()!=null){
                Product product1= stockDto.getProduct();
-
                ProductDto productDto=objectMapper.convertValue(product1,ProductDto.class);
-
                stock.setProduct(product1);
             }else {
                 stock.setProduct(null);

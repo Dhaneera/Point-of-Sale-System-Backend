@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -19,4 +21,5 @@ public class UsersDto {
     private Long id;
     private String username;
     private String password;
+    private List<String> roles;
 }

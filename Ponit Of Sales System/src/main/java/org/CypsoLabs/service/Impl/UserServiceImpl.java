@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UsersService {
@@ -57,6 +58,20 @@ public class UserServiceImpl implements UsersService {
     @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public List<UsersDto> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(user -> UsersDto.builder()
+                        .id(user.getId())
+                        .username(user.getUsername())
+                        .roles(user.getRoles().stream()
+                                .map(role -> roleRepository.findById(role.getId()).orElseThrow(() -> new RuntimeException("Role not found")).getName())
+                                .collect(Collectors.toList()))
+                        .build())
+                .collect(Collectors.toList());
     }
 
 

@@ -44,8 +44,8 @@ public class SecurityConfig {
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/api/auth/**").permitAll()// Permit all requests to /api/auth/**
-//                                .requestMatchers("/api/auth/login").permitAll()
+                                .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/api/auth/login").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .httpBasic(withDefaults()); // Enable HTTP Basic authentication

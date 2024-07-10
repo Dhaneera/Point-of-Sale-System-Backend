@@ -21,6 +21,8 @@ public class Category {
     @Column(name = "categoryId")
     private  Long id;
 
+
+
     @Column(name = "category name",nullable = false)
     private  String name;
 

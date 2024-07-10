@@ -14,7 +14,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/category/api")
 public class CategoryController {
-
     @Autowired
     private CategoryService categoryService;
 
@@ -48,7 +47,6 @@ public class CategoryController {
         if (categoryDto.getId() == null)return ResponseEntity.notFound().build();
         return ResponseEntity.ok(categoryDto);
     }
-
     @DeleteMapping("/delete/{name}")
     public ResponseEntity<String>deleteCategoryByName(@PathVariable String name){
         boolean deleted = categoryService.deleteCategoryByName(name);
@@ -62,5 +60,4 @@ public class CategoryController {
         if (updateDto!=null)return  ResponseEntity.ok(updateDto);
         else return  ResponseEntity.notFound().build();
     }
-
 }

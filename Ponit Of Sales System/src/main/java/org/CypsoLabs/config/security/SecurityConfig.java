@@ -21,7 +21,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled=true)
-public class SecurityConfig {
+public class SecurityConfig  {
 
     private final JwtAuthEntryPoint jwtAuthEntryPoint;
     private final CustomUserDetailServiceImpl customUserDetailServiceImpl;
